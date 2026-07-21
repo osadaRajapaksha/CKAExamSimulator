@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "title": "RBAC: Service Accounts & Roles",
+    "weight": "8%",
+    "context": "k8s-admin",
+    "description": "<p>Create a new ServiceAccount named <code>backend-sa</code> in the <code>production</code> namespace.</p><p>Create a Role named <code>pod-reader</code> that allows <code>get</code>, <code>watch</code>, and <code>list</code> on pods in the same namespace.</p><p>Bind the Role to the ServiceAccount using a RoleBinding named <code>backend-sa-binding</code>.</p>"
+  },
+  {
+    "id": 2,
+    "title": "Network Policies",
+    "weight": "12%",
+    "context": "k8s-cluster",
+    "description": "<p>There is an existing deployment named <code>db-app</code> with the label <code>tier=database</code> in the <code>backend</code> namespace.</p><p>Create a NetworkPolicy named <code>db-netpol</code> that restricts incoming traffic to <code>db-app</code>. It should ONLY allow ingress traffic from pods with the label <code>tier=frontend</code> in the same namespace.</p><p>All other ingress traffic to <code>db-app</code> should be denied.</p>"
+  },
+  {
+    "id": 3,
+    "title": "Persistent Storage",
+    "weight": "10%",
+    "context": "k8s-cluster",
+    "description": "<p>Create a PersistentVolume named <code>task-pv-volume</code> with storage capacity of 1Gi, access mode ReadWriteOnce, hostPath <code>/mnt/data</code>, and no storageClassName.</p><p>Next, create a PersistentVolumeClaim named <code>task-pv-claim</code> requesting 500Mi of storage that will bind to this PV.</p><p>Finally, create a pod named <code>task-pv-pod</code> using the <code>nginx</code> image that mounts this volume at <code>/usr/share/nginx/html</code>.</p>"
+  },
+  {
+    "id": 4,
+    "title": "Node Maintenance",
+    "weight": "7%",
+    "context": "k8s-cluster",
+    "description": "<p>You need to perform maintenance on the node <code>node02</code>.</p><p>Safely drain the node to ensure no workloads are interrupted. Note that there are pods managed by DaemonSets on this node, which should be ignored during the drain process.</p><p>After you have run the command, do not uncordon the node.</p>"
+  },
+  {
+    "id": 5,
+    "title": "Sidecar Container Pattern",
+    "weight": "9%",
+    "context": "k8s-cluster",
+    "description": "<p>A pod named <code>legacy-app</code> is running in the default namespace, writing logs to a file at <code>/var/log/app.log</code>.</p><p>Modify the pod to add a sidecar container running the <code>busybox</code> image. The sidecar should run the command: <code>tail -f /var/log/app.log</code> so that the logs can be captured via <code>kubectl logs</code>.</p><p>You will need to use an emptyDir volume shared between both containers to achieve this.</p>"
+  },
+  {
+    "id": 6,
+    "title": "Ingress Routing",
+    "weight": "11%",
+    "context": "k8s-cluster",
+    "description": "<p>Create an Ingress resource named <code>webapp-ingress</code> in the <code>default</code> namespace.</p><p>The Ingress should route requests targeting the host <code>ckad.example.com</code> to an existing service named <code>webapp-service</code> on port 80.</p><p>Assume the Ingress controller is already installed and listening on the cluster.</p>"
+  },
+  {
+    "id": 7,
+    "title": "Taints and Tolerations",
+    "weight": "6%",
+    "context": "k8s-cluster",
+    "description": "<p>Node <code>node01</code> has been tainted with <code>dedicated=special-team:NoSchedule</code>.</p><p>Create a deployment named <code>special-app</code> with 2 replicas using the <code>redis</code> image.</p><p>Ensure that the pods in this deployment tolerate the taint and are able to be scheduled on <code>node01</code>.</p>"
+  },
+  {
+    "id": 8,
+    "title": "Troubleshooting Services",
+    "weight": "15%",
+    "context": "k8s-cluster",
+    "description": "<p>A service named <code>frontend-svc</code> is not able to route traffic to the pods of the <code>frontend-deploy</code> deployment. The deployment is running fine.</p><p>Investigate and fix the issue so that <code>curl frontend-svc</code> from within the cluster successfully returns the application's response.</p>"
+  }
+]
