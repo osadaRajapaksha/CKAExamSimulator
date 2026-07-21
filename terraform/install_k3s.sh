@@ -1,6 +1,6 @@
 #!/bin/bash
-# Install K3s (lightweight Kubernetes)
-curl -sfL https://get.k3s.io | sh -
+# Install K3s (lightweight Kubernetes) with explicit node name 'node01'
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --node-name node01" sh -
 
 # Wait for node to be ready
 sleep 15
@@ -20,5 +20,11 @@ sudo apt-get install -y nodejs build-essential python3
 cd /home/ubuntu
 git clone https://github.com/osadaRajapaksha/CKAExamSimulator.git
 cd CKAExamSimulator/backend
+
+# Apply prerequisite resources for the exam questions
+sudo k3s kubectl apply -f /home/ubuntu/CKAExamSimulator/backend/setup.yaml
+# Taint node01 for question 7
+sudo k3s kubectl taint nodes node01 dedicated=special-team:NoSchedule
+
 npm install
 nohup node server.js > backend.log 2>&1 &
