@@ -7,6 +7,7 @@ const cors = require('cors');
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
@@ -52,6 +53,32 @@ wss.on('connection', (ws) => {
 
 app.get('/', (req, res) => {
     res.send('CKA Simulator Backend is running.');
+});
+
+const { exec } = require('child_process');
+const path = require('path');
+
+app.post('/api/verify', (req, res) => {
+    const { taskId } = req.body;
+    if (!taskId) {
+        return res.status(400).json({ error: 'taskId is required' });
+    }
+
+    const scriptPath = path.join(__dirname, 'verify-scripts', `${taskId}.sh`);
+    
+    // Run the verification script
+    exec(`bash ${scriptPath}`, (error, stdout, stderr) => {
+        if (error) {
+            return res.json({
+                success: false,
+                logs: stdout + stderr || error.message
+            });
+        }
+        return res.json({
+            success: true,
+            logs: stdout + stderr || 'Validation passed.'
+        });
+    });
 });
 
 const PORT = 3001;
