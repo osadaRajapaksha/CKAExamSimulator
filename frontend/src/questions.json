@@ -25,7 +25,7 @@
     "title": "Node Maintenance",
     "weight": "7%",
     "context": "k8s-cluster",
-    "description": "<p>You need to perform maintenance on the node <code>node01</code>.</p><p>Safely drain the node to ensure no workloads are interrupted. Note that there are pods managed by DaemonSets on this node, which should be ignored during the drain process.</p><p>After you have run the command, do not uncordon the node.</p>"
+    "description": "<p>You need to perform maintenance on the cluster's node.</p><p>Safely drain the node to ensure no workloads are interrupted. Note that there are pods managed by DaemonSets on this node, which should be ignored during the drain process.</p><p>After you have run the command, do not uncordon the node.</p>"
   },
   {
     "id": 5,
@@ -46,7 +46,7 @@
     "title": "Taints and Tolerations",
     "weight": "6%",
     "context": "k8s-cluster",
-    "description": "<p>Node <code>node01</code> has been tainted with <code>dedicated=special-team:NoSchedule</code>.</p><p>Create a deployment named <code>special-app</code> with 2 replicas using the <code>redis</code> image.</p><p>Ensure that the pods in this deployment tolerate the taint and are able to be scheduled on <code>node01</code>.</p>"
+    "description": "<p>The cluster node has been tainted with <code>dedicated=special-team:NoSchedule</code>.</p><p>Create a deployment named <code>special-app</code> with 2 replicas using the <code>redis</code> image.</p><p>Ensure that the pods in this deployment tolerate the taint and are able to be scheduled on the node.</p>"
   },
   {
     "id": 8,

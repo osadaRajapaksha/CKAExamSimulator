@@ -23,8 +23,9 @@ cd CKAExamSimulator/backend
 
 # Apply prerequisite resources for the exam questions
 sudo k3s kubectl apply -f /home/ubuntu/CKAExamSimulator/backend/setup.yaml
-# Taint node01 for question 7
-sudo k3s kubectl taint nodes node01 dedicated=special-team:NoSchedule
+# Taint the node for question 7
+NODE=$(sudo k3s kubectl get nodes -o jsonpath='{.items[0].metadata.name}')
+sudo k3s kubectl taint nodes $NODE dedicated=special-team:NoSchedule
 
 npm install
 nohup node server.js > backend.log 2>&1 &

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Check if node01 exists
-node=$(kubectl get node node01 -o json 2>/dev/null)
+# Get the first node
+node=$(kubectl get node -o jsonpath='{.items[0]}' 2>/dev/null)
 if [ -z "$node" ]; then
-    echo "Validation Failed: Node 'node01' not found."
+    echo "Validation Failed: No nodes found in the cluster."
     exit 1
 fi
 
