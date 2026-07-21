@@ -17,11 +17,15 @@ sleep 5
 # Create a multi-node cluster (1 control-plane, 2 agents)
 sudo k3d cluster create cka --servers 1 --agents 2
 
-# Configure kubeconfig for the ubuntu user
+# Configure kubeconfig for the ubuntu user and root user
 sudo mkdir -p /home/ubuntu/.kube
 sudo k3d kubeconfig get cka > /home/ubuntu/.kube/config
 sudo chown -R ubuntu:ubuntu /home/ubuntu/.kube
 echo "export KUBECONFIG=/home/ubuntu/.kube/config" >> /home/ubuntu/.bashrc
+
+sudo mkdir -p /root/.kube
+sudo cp /home/ubuntu/.kube/config /root/.kube/config
+sudo echo "export KUBECONFIG=/root/.kube/config" >> /root/.bashrc
 
 # Wait for all nodes to be ready
 sleep 15
