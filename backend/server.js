@@ -32,7 +32,16 @@ wss.on('connection', (ws) => {
 
     // Receive data from the websocket and write to the pty
     ws.on('message', (msg) => {
-        ptyProcess.write(msg.toString());
+        try {
+            const parsed = JSON.parse(msg.toString());
+            if (parsed.type === 'resize') {
+                ptyProcess.resize(parsed.cols, parsed.rows);
+            } else if (parsed.type === 'input') {
+                ptyProcess.write(parsed.data);
+            }
+        } catch (e) {
+            ptyProcess.write(msg.toString());
+        }
     });
 
     ws.on('close', () => {

@@ -39,6 +39,8 @@ export default function Terminal() {
     ws.onopen = () => {
       term.writeln('\x1b[32m\x1b[1mConnected to CKA Terminal Backend\x1b[0m');
       term.writeln('');
+      // Send initial dimensions
+      ws.send(JSON.stringify({ type: 'resize', cols: term.cols, rows: term.rows }));
     };
 
     ws.onmessage = (event) => {
@@ -49,12 +51,15 @@ export default function Terminal() {
     term.onData((data) => {
       // Data from terminal to backend
       if (ws.readyState === WebSocket.OPEN) {
-        ws.send(data);
+        ws.send(JSON.stringify({ type: 'input', data: data }));
       }
     });
 
     const handleResize = () => {
       fitAddon.fit();
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: 'resize', cols: term.cols, rows: term.rows }));
+      }
     };
 
     window.addEventListener('resize', handleResize);
