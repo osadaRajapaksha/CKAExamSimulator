@@ -32,7 +32,7 @@ wss.on('connection', (ws) => {
 
     // Receive data from the websocket and write to the pty
     ws.on('message', (msg) => {
-        ptyProcess.write(msg);
+        ptyProcess.write(msg.toString());
     });
 
     ws.on('close', () => {

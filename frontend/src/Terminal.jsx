@@ -32,7 +32,8 @@ export default function Terminal() {
     fitAddonRef.current = fitAddon;
 
     // Connect to WebSocket server
-    const ws = new WebSocket('ws://localhost:3001');
+    const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:3001';
+    const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
     ws.onopen = () => {
