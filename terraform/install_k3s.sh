@@ -1,16 +1,30 @@
 #!/bin/bash
-# Install K3s (lightweight Kubernetes) with explicit node name 'node01'
-curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --node-name node01" sh -
+# Install Docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sh get-docker.sh
+sudo usermod -aG docker ubuntu
 
-# Wait for node to be ready
-sleep 15
+# Install kubectl
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
-# Change kubeconfig permissions so the ubuntu user can use kubectl without sudo
-sudo chmod 644 /etc/rancher/k3s/k3s.yaml
+# Install k3d
+curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+
+# Wait a moment for docker daemon
+sleep 5
+
+# Create a multi-node cluster (1 control-plane, 2 agents)
+sudo k3d cluster create cka --servers 1 --agents 2
+
+# Configure kubeconfig for the ubuntu user
 sudo mkdir -p /home/ubuntu/.kube
-sudo cp /etc/rancher/k3s/k3s.yaml /home/ubuntu/.kube/config
+sudo k3d kubeconfig get cka > /home/ubuntu/.kube/config
 sudo chown -R ubuntu:ubuntu /home/ubuntu/.kube
 echo "export KUBECONFIG=/home/ubuntu/.kube/config" >> /home/ubuntu/.bashrc
+
+# Wait for all nodes to be ready
+sleep 15
 
 # Install Node.js and build tools for node-pty
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
@@ -22,10 +36,12 @@ git clone https://github.com/osadaRajapaksha/CKAExamSimulator.git
 cd CKAExamSimulator/backend
 
 # Apply prerequisite resources for the exam questions
-sudo k3s kubectl apply -f /home/ubuntu/CKAExamSimulator/backend/setup.yaml
-# Taint the node for question 7
-NODE=$(sudo k3s kubectl get nodes -o jsonpath='{.items[0].metadata.name}')
-sudo k3s kubectl taint nodes $NODE dedicated=special-team:NoSchedule
+# Note: we use kubectl directly now instead of k3s kubectl
+sudo KUBECONFIG=/home/ubuntu/.kube/config kubectl apply -f /home/ubuntu/CKAExamSimulator/backend/setup.yaml
 
+# Taint the second agent node for question 7
+sudo KUBECONFIG=/home/ubuntu/.kube/config kubectl taint nodes k3d-cka-agent-1 dedicated=special-team:NoSchedule
+
+# Install and start backend
 npm install
 nohup node server.js > backend.log 2>&1 &

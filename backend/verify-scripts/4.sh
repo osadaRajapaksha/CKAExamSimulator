@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Get the first node
-node=$(kubectl get node -o jsonpath='{.items[0]}' 2>/dev/null)
+# Get the node k3d-cka-agent-0
+node=$(kubectl get node k3d-cka-agent-0 -o json 2>/dev/null)
 if [ -z "$node" ]; then
-    echo "Validation Failed: No nodes found in the cluster."
+    echo "Validation Failed: Node 'k3d-cka-agent-0' not found in the cluster."
     exit 1
 fi
 
