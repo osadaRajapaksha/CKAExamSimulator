@@ -17,7 +17,7 @@ fi
 # Let's use python3 to parse JSON since it's installed.
 
 python3 -c "
-import sys, json
+import sys, json, os
 try:
     data = json.loads(sys.stdin.read())
     spec = data.get('spec', {})

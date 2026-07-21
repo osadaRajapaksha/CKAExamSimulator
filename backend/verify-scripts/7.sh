@@ -6,11 +6,11 @@ if [ -z "$deploy" ]; then
     exit 1
 fi
 
-python3 -c "
-import sys, json
+DEPLOY_JSON="$deploy" python3 -c "
+import sys, json, os
 
 try:
-    deploy = json.loads('''$deploy''')
+    deploy = json.loads(os.environ.get('DEPLOY_JSON', '{}'))
     replicas = deploy['spec'].get('replicas')
     if replicas != 2:
         print('Validation Failed: Replicas is not 2')

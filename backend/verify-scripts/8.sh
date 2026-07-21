@@ -12,12 +12,12 @@ if [ -z "$deploy" ]; then
     exit 1
 fi
 
-python3 -c "
-import sys, json
+DEPLOY_JSON="$deploy" SVC_JSON="$svc" python3 -c "
+import sys, json, os
 
 try:
-    svc = json.loads('''$svc''')
-    deploy = json.loads('''$deploy''')
+    svc = json.loads(os.environ.get('SVC_JSON', '{}'))
+    deploy = json.loads(os.environ.get('DEPLOY_JSON', '{}'))
     
     svc_selector = svc.get('spec', {}).get('selector', {})
     pod_labels = deploy.get('spec', {}).get('template', {}).get('metadata', {}).get('labels', {})

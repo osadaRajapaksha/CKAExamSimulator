@@ -4,6 +4,11 @@ kind: Namespace
 metadata:
   name: backend
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: production
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:

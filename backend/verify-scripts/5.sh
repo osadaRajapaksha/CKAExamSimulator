@@ -6,11 +6,11 @@ if [ -z "$pod" ]; then
     exit 1
 fi
 
-python3 -c "
-import sys, json
+POD_JSON="$pod" python3 -c "
+import sys, json, os
 
 try:
-    pod = json.loads('''$pod''')
+    pod = json.loads(os.environ.get('POD_JSON', '{}'))
     containers = pod['spec'].get('containers', [])
     if len(containers) < 2:
         print('Validation Failed: Pod does not have at least 2 containers (sidecar missing)')

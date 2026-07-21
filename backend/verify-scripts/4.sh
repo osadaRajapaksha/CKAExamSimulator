@@ -7,11 +7,11 @@ if [ -z "$node" ]; then
     exit 1
 fi
 
-python3 -c "
-import sys, json
+NODE_JSON="$node" python3 -c "
+import sys, json, os
 
 try:
-    node = json.loads('''$node''')
+    node = json.loads(os.environ.get('NODE_JSON', '{}'))
     if node.get('spec', {}).get('unschedulable') != True:
         print('Validation Failed: Node is not cordoned (unschedulable)')
         sys.exit(1)

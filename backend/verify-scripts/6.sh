@@ -6,11 +6,11 @@ if [ -z "$ingress" ]; then
     exit 1
 fi
 
-python3 -c "
-import sys, json
+INGRESS_JSON="$ingress" python3 -c "
+import sys, json, os
 
 try:
-    ingress = json.loads('''$ingress''')
+    ingress = json.loads(os.environ.get('INGRESS_JSON', '{}'))
     rules = ingress['spec'].get('rules', [])
     found_rule = False
     

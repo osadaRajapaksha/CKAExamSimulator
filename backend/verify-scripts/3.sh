@@ -21,11 +21,11 @@ if [ -z "$pod" ]; then
     exit 1
 fi
 
-python3 -c "
-import sys, json
+PV_JSON="$pv" PVC_JSON="$pvc" POD_JSON="$pod" python3 -c "
+import sys, json, os
 
 try:
-    pv = json.loads('''$pv''')
+    pv = json.loads(os.environ.get('PV_JSON', '{}'))
     if pv['spec'].get('capacity', {}).get('storage') != '1Gi':
         print('Validation Failed: PV capacity is not 1Gi')
         sys.exit(1)
@@ -36,13 +36,13 @@ try:
         print('Validation Failed: PV hostPath is not /mnt/data')
         sys.exit(1)
         
-    pvc = json.loads('''$pvc''')
+    pvc = json.loads(os.environ.get('PVC_JSON', '{}'))
     req = pvc['spec'].get('resources', {}).get('requests', {}).get('storage')
     if req != '500Mi':
         print('Validation Failed: PVC requested storage is not 500Mi')
         sys.exit(1)
         
-    pod = json.loads('''$pod''')
+    pod = json.loads(os.environ.get('POD_JSON', '{}'))
     containers = pod['spec'].get('containers', [])
     if not containers or containers[0].get('image') != 'nginx':
         print('Validation Failed: Pod image is not nginx')
