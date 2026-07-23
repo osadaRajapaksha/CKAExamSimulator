@@ -23,6 +23,10 @@ sudo k3d kubeconfig get cka > /home/ubuntu/.kube/config
 sudo chown -R ubuntu:ubuntu /home/ubuntu/.kube
 echo "export KUBECONFIG=/home/ubuntu/.kube/config" >> /home/ubuntu/.bashrc
 
+# Set up contexts for tasks
+sudo KUBECONFIG=/home/ubuntu/.kube/config kubectl config rename-context k3d-cka k8s-admin
+sudo KUBECONFIG=/home/ubuntu/.kube/config kubectl config set-context k8s-cluster --cluster=k3d-cka --user=admin@k3d-cka
+
 sudo mkdir -p /root/.kube
 sudo cp /home/ubuntu/.kube/config /root/.kube/config
 sudo echo "export KUBECONFIG=/root/.kube/config" >> /root/.bashrc
