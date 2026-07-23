@@ -92,3 +92,90 @@ spec:
   ports:
   - port: 80
     targetPort: 80
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-deploy
+  namespace: default
+  labels:
+    app: scale-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scale-app
+  template:
+    metadata:
+      labels:
+        app: scale-app
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-update
+  namespace: default
+  labels:
+    app: web-update
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web-update
+  template:
+    metadata:
+      labels:
+        app: web-update
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-server
+  namespace: default
+  labels:
+    app: web-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web-server
+  template:
+    metadata:
+      labels:
+        app: web-server
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secure-pod
+  namespace: default
+  labels:
+    role: secure
+spec:
+  containers:
+  - name: nginx
+    image: nginx:alpine
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: broken-pod
+  namespace: default
+spec:
+  containers:
+  - name: broken
+    image: busybox
+    command: ['sleep', 'abc']

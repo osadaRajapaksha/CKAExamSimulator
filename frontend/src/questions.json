@@ -2,57 +2,141 @@
   {
     "id": 1,
     "title": "RBAC: Service Accounts & Roles",
-    "weight": "8%",
+    "weight": "5%",
     "context": "k8s-admin",
     "description": "<p>Create a new ServiceAccount named <code>backend-sa</code> in the <code>production</code> namespace.</p><p>Create a Role named <code>pod-reader</code> that allows <code>get</code>, <code>watch</code>, and <code>list</code> on pods in the same namespace.</p><p>Bind the Role to the ServiceAccount using a RoleBinding named <code>backend-sa-binding</code>.</p>"
   },
   {
     "id": 2,
     "title": "Network Policies",
-    "weight": "12%",
+    "weight": "6%",
     "context": "k8s-cluster",
     "description": "<p>There is an existing deployment named <code>db-app</code> with the label <code>tier=database</code> in the <code>backend</code> namespace.</p><p>Create a NetworkPolicy named <code>db-netpol</code> that restricts incoming traffic to <code>db-app</code>. It should ONLY allow ingress traffic from pods with the label <code>tier=frontend</code> in the same namespace.</p><p>All other ingress traffic to <code>db-app</code> should be denied.</p>"
   },
   {
     "id": 3,
     "title": "Persistent Storage",
-    "weight": "10%",
+    "weight": "6%",
     "context": "k8s-cluster",
     "description": "<p>Create a PersistentVolume named <code>task-pv-volume</code> with storage capacity of 1Gi, access mode ReadWriteOnce, hostPath <code>/mnt/data</code>, and no storageClassName.</p><p>Next, create a PersistentVolumeClaim named <code>task-pv-claim</code> requesting 500Mi of storage that will bind to this PV.</p><p>Finally, create a pod named <code>task-pv-pod</code> using the <code>nginx</code> image that mounts this volume at <code>/usr/share/nginx/html</code>.</p>"
   },
   {
     "id": 4,
     "title": "Node Maintenance",
-    "weight": "7%",
+    "weight": "5%",
     "context": "k8s-cluster",
     "description": "<p>You need to perform maintenance on the node <code>k3d-cka-agent-0</code>.</p><p>Safely drain the node to ensure no workloads are interrupted. Note that there are pods managed by DaemonSets on this node, which should be ignored during the drain process.</p><p>After you have run the command, do not uncordon the node.</p>"
   },
   {
     "id": 5,
     "title": "Sidecar Container Pattern",
-    "weight": "9%",
+    "weight": "5%",
     "context": "k8s-cluster",
     "description": "<p>A pod named <code>legacy-app</code> is running in the default namespace, writing logs to a file at <code>/var/log/app.log</code>.</p><p>Modify the pod to add a sidecar container running the <code>busybox</code> image. The sidecar should run the command: <code>tail -f /var/log/app.log</code> so that the logs can be captured via <code>kubectl logs</code>.</p><p>You will need to use an emptyDir volume shared between both containers to achieve this.</p>"
   },
   {
     "id": 6,
     "title": "Ingress Routing",
-    "weight": "11%",
+    "weight": "6%",
     "context": "k8s-cluster",
     "description": "<p>Create an Ingress resource named <code>webapp-ingress</code> in the <code>default</code> namespace.</p><p>The Ingress should route requests targeting the host <code>ckad.example.com</code> to an existing service named <code>webapp-service</code> on port 80.</p><p>Assume the Ingress controller is already installed and listening on the cluster.</p>"
   },
   {
     "id": 7,
     "title": "Taints and Tolerations",
-    "weight": "6%",
+    "weight": "5%",
     "context": "k8s-cluster",
     "description": "<p>Node <code>k3d-cka-agent-1</code> has been tainted with <code>dedicated=special-team:NoSchedule</code>.</p><p>Create a deployment named <code>special-app</code> with 2 replicas using the <code>redis</code> image.</p><p>Ensure that the pods in this deployment tolerate the taint and are able to be scheduled on <code>k3d-cka-agent-1</code>.</p>"
   },
   {
     "id": 8,
     "title": "Troubleshooting Services",
-    "weight": "15%",
+    "weight": "5%",
     "context": "k8s-cluster",
     "description": "<p>A service named <code>frontend-svc</code> is not able to route traffic to the pods of the <code>frontend-deploy</code> deployment. The deployment is running fine.</p><p>Investigate and fix the issue so that <code>curl frontend-svc</code> from within the cluster successfully returns the application's response.</p>"
+  },
+  {
+    "id": 9,
+    "title": "Deployment Scaling",
+    "weight": "4%",
+    "context": "k8s-cluster",
+    "description": "<p>There is an existing deployment named <code>scale-deploy</code> in the <code>default</code> namespace.</p><p>Scale this deployment so that it runs exactly 5 replicas.</p>"
+  },
+  {
+    "id": 10,
+    "title": "Rolling Updates",
+    "weight": "6%",
+    "context": "k8s-cluster",
+    "description": "<p>A deployment named <code>web-update</code> is running in the <code>default</code> namespace with the <code>nginx:1.14</code> image.</p><p>Update the deployment to use the <code>nginx:1.15</code> image and ensure the rollout is recorded in the deployment's annotations.</p>"
+  },
+  {
+    "id": 11,
+    "title": "ConfigMaps",
+    "weight": "5%",
+    "context": "k8s-cluster",
+    "description": "<p>Create a ConfigMap named <code>app-config</code> in the <code>default</code> namespace containing the key <code>APP_ENV</code> with the value <code>production</code>.</p><p>Then, create a pod named <code>config-pod</code> using the <code>busybox</code> image that sleeps for 3600 seconds, and inject the ConfigMap key as an environment variable named <code>APP_ENV</code>.</p>"
+  },
+  {
+    "id": 12,
+    "title": "Secrets",
+    "weight": "5%",
+    "context": "k8s-cluster",
+    "description": "<p>Create a generic Secret named <code>db-credentials</code> in the <code>default</code> namespace with the key <code>password</code> and value <code>supersecret</code>.</p><p>Create a pod named <code>secret-pod</code> using the <code>redis</code> image and mount this secret as a volume at <code>/etc/secrets</code>.</p>"
+  },
+  {
+    "id": 13,
+    "title": "Init Containers",
+    "weight": "6%",
+    "context": "k8s-cluster",
+    "description": "<p>Create a pod named <code>init-demo</code> using the <code>nginx</code> image.</p><p>Add an init container to this pod using the <code>busybox</code> image that runs the command <code>sh -c 'echo Initialized &gt; /work-dir/index.html'</code>.</p><p>Mount an emptyDir volume named <code>workdir</code> at <code>/work-dir</code> in the init container and at <code>/usr/share/nginx/html</code> in the main container.</p>"
+  },
+  {
+    "id": 14,
+    "title": "ClusterRoles",
+    "weight": "5%",
+    "context": "k8s-admin",
+    "description": "<p>Create a new ServiceAccount named <code>node-reader-sa</code> in the <code>default</code> namespace.</p><p>Create a ClusterRole named <code>node-reader</code> that allows <code>get</code>, <code>watch</code>, and <code>list</code> on <code>nodes</code>.</p><p>Create a ClusterRoleBinding named <code>node-reader-binding</code> to bind the ClusterRole to the ServiceAccount.</p>"
+  },
+  {
+    "id": 15,
+    "title": "Node Affinity",
+    "weight": "4%",
+    "context": "k8s-cluster",
+    "description": "<p>Label the node <code>k3d-cka-agent-0</code> with <code>disktype=ssd</code>.</p><p>Create a pod named <code>affinity-pod</code> using the <code>nginx</code> image that must be scheduled on nodes with the label <code>disktype=ssd</code> using <code>requiredDuringSchedulingIgnoredDuringExecution</code> nodeAffinity.</p>"
+  },
+  {
+    "id": 16,
+    "title": "CronJobs",
+    "weight": "4%",
+    "context": "k8s-cluster",
+    "description": "<p>Create a CronJob named <code>hello-cron</code> in the <code>default</code> namespace.</p><p>It should run every minute (<code>* * * * *</code>) and run a pod with the <code>busybox</code> image executing the command: <code>/bin/sh -c 'echo Hello World'</code>.</p>"
+  },
+  {
+    "id": 17,
+    "title": "DaemonSets",
+    "weight": "5%",
+    "context": "k8s-cluster",
+    "description": "<p>Create a DaemonSet named <code>fluentd-ds</code> in the <code>kube-system</code> namespace using the image <code>fluentd</code> (or any valid image like <code>busybox</code> with sleep command if fluentd fails to start).</p><p>Ensure that it runs one pod on every node.</p>"
+  },
+  {
+    "id": 18,
+    "title": "NodePort Services",
+    "weight": "5%",
+    "context": "k8s-cluster",
+    "description": "<p>There is an existing deployment named <code>web-server</code> in the <code>default</code> namespace.</p><p>Create a Service named <code>web-server-svc</code> to expose this deployment on NodePort <code>30080</code>, mapping to port 80 on the pods.</p>"
+  },
+  {
+    "id": 19,
+    "title": "NetworkPolicy Egress",
+    "weight": "4%",
+    "context": "k8s-cluster",
+    "description": "<p>There is a pod named <code>secure-pod</code> in the <code>default</code> namespace with label <code>role=secure</code>.</p><p>Create a NetworkPolicy named <code>secure-egress</code> in the <code>default</code> namespace that restricts egress from <code>secure-pod</code> so it can only connect to pods with the label <code>role=api</code> on port 8080.</p><p>Assume ingress is allowed.</p>"
+  },
+  {
+    "id": 20,
+    "title": "Troubleshooting Pods",
+    "weight": "4%",
+    "context": "k8s-cluster",
+    "description": "<p>A pod named <code>broken-pod</code> is in a CrashLoopBackOff state due to an invalid command.</p><p>Fix the pod so that it runs successfully. It should run the <code>busybox</code> image and execute <code>sleep 3600</code>.</p>"
   }
 ]
