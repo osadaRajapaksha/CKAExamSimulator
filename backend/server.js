@@ -22,7 +22,7 @@ wss.on('connection', (ws) => {
         name: 'xterm-color',
         cols: 80,
         rows: 30,
-        cwd: process.env.HOME || process.cwd(),
+        cwd: '/root',
         env: process.env
     });
 
