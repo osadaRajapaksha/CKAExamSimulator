@@ -31,7 +31,7 @@ wss.on('connection', (ws, req) => {
 
     const startTerminal = () => {
         // Spawn a pseudo-terminal into the k3d cluster container
-        const ptyProcess = pty.spawn('docker', ['exec', '-it', `k3d-${clusterName}-server-0`, 'bash'], {
+        const ptyProcess = pty.spawn('docker', ['exec', '-it', `k3d-${clusterName}-server-0`, 'sh'], {
             name: 'xterm-color',
             cols: 80,
             rows: 30,
