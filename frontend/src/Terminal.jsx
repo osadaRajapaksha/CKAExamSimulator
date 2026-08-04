@@ -1,9 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { Terminal as XTerm } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
+import { useAuthContext } from "@asgardeo/auth-react";
 import '@xterm/xterm/css/xterm.css';
 
 export default function Terminal() {
+  const { state } = useAuthContext();
+
   const terminalRef = useRef(null);
   const xtermRef = useRef(null);
   const fitAddonRef = useRef(null);
@@ -32,13 +35,15 @@ export default function Terminal() {
     fitAddonRef.current = fitAddon;
 
     // Connect to WebSocket server
-    const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:3001';
+    const wsUrlBase = import.meta.env.VITE_WS_URL || 'ws://localhost:3001';
+    const userId = state?.username || state?.sub || 'anonymous';
+    const wsUrl = `${wsUrlBase}?userId=${encodeURIComponent(userId)}`;
+    
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
     ws.onopen = () => {
-      term.writeln('\x1b[32m\x1b[1mConnected to CKA Terminal Backend\x1b[0m');
-      term.writeln('');
+      // The backend will handle the initial messages
       // Send initial dimensions
       ws.send(JSON.stringify({ type: 'resize', cols: term.cols, rows: term.rows }));
     };
