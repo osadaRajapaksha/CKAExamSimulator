@@ -5,8 +5,8 @@ import './index.css'
 import App from './App.jsx'
 
 const asgardeoConfig = {
-    signInRedirectURL: "http://localhost:5173/",
-    signOutRedirectURL: "http://localhost:5173/",
+    signInRedirectURL: window.location.origin,
+    signOutRedirectURL: window.location.origin,
     clientID: import.meta.env.VITE_ASGARDEO_CLIENT_ID,
     baseUrl: import.meta.env.VITE_ASGARDEO_BASE_URL,
     scope: [ "openid", "profile" ]

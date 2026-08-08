@@ -23,6 +23,16 @@ function App() {
     return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
+  if (state.isLoading) {
+    return (
+      <div className="login-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#1e1e1e', color: 'white' }}>
+        <TerminalIcon className="k8s-logo" size={64} style={{ marginBottom: '20px' }} />
+        <h1 style={{ marginBottom: '30px' }}>CKA Exam Simulator</h1>
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
   if (!state.isAuthenticated) {
     return (
       <div className="login-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#1e1e1e', color: 'white' }}>

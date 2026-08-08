@@ -5,5 +5,5 @@ variable "aws_region" {
 
 variable "instance_type" {
   description = "EC2 instance type (t3.small or t3.medium recommended for K8s)"
-  default     = "t3.small"
+  default     = "t3.large"
 }

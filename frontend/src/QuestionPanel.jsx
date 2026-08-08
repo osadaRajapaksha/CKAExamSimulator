@@ -35,7 +35,7 @@ export default function QuestionPanel() {
     
     try {
       const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:3001';
-      const apiUrl = wsUrl.replace('ws://', 'http://').replace('wss://', 'https://') + '/api/verify';
+      const apiUrl = wsUrl.replace('ws://', 'http://').replace('wss://', 'https://').replace('/ws', '') + '/api/verify';
       
       const response = await fetch(apiUrl, {
         method: 'POST',

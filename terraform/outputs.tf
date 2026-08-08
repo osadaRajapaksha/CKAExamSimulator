@@ -1,6 +1,6 @@
-output "instance_public_ip" {
-  description = "The public IP address of the K3s server"
-  value       = aws_instance.k3s_server.public_ip
+output "alb_dns_name" {
+  description = "The DNS name of the Application Load Balancer"
+  value       = aws_lb.backend_alb.dns_name
 }
 
 output "s3_website_url" {
@@ -11,4 +11,9 @@ output "s3_website_url" {
 output "s3_bucket_name" {
   description = "The name of the S3 bucket"
   value       = aws_s3_bucket.frontend_bucket.bucket
+}
+
+output "cloudfront_url" {
+  description = "The HTTPS URL of the CloudFront distribution"
+  value       = "https://${aws_cloudfront_distribution.frontend_cdn.domain_name}"
 }
