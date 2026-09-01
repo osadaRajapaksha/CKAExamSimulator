@@ -4,7 +4,7 @@ import { FitAddon } from '@xterm/addon-fit';
 import { useAuthContext } from "@asgardeo/auth-react";
 import '@xterm/xterm/css/xterm.css';
 
-export default function Terminal() {
+export default function Terminal({ settings }) {
   const { state } = useAuthContext();
 
   const terminalRef = useRef(null);
@@ -12,17 +12,27 @@ export default function Terminal() {
   const fitAddonRef = useRef(null);
   const wsRef = useRef(null);
 
+  const getTheme = (themeName) => {
+    switch (themeName) {
+      case 'light':
+        return { background: '#ffffff', foreground: '#0f172a', cursor: '#0f172a' };
+      case 'ocean':
+        return { background: '#0f172a', foreground: '#38bdf8', cursor: '#38bdf8' };
+      case 'dracula':
+        return { background: '#282a36', foreground: '#f8f8f2', cursor: '#f8f8f2' };
+      case 'dark':
+      default:
+        return { background: '#000000', foreground: '#f8fafc', cursor: '#f8fafc' };
+    }
+  };
+
   useEffect(() => {
     // Initialize xterm.js
     const term = new XTerm({
       cursorBlink: true,
-      theme: {
-        background: '#000000',
-        foreground: '#f8fafc',
-        cursor: '#f8fafc',
-      },
+      theme: getTheme(settings?.theme || 'dark'),
       fontFamily: '"JetBrains Mono", "Fira Code", monospace',
-      fontSize: 14,
+      fontSize: settings?.fontSize || 14,
     });
     
     const fitAddon = new FitAddon();
@@ -74,7 +84,27 @@ export default function Terminal() {
       ws.close();
       term.dispose();
     };
-  }, []);
+  }, []); // Only run once on mount
+
+  // Handle settings changes
+  useEffect(() => {
+    if (xtermRef.current) {
+      xtermRef.current.options.fontSize = settings?.fontSize || 14;
+      xtermRef.current.options.theme = getTheme(settings?.theme || 'dark');
+      
+      // Need a slight delay for font size changes to render before fitting
+      setTimeout(() => {
+        if (fitAddonRef.current && wsRef.current?.readyState === WebSocket.OPEN) {
+          fitAddonRef.current.fit();
+          wsRef.current.send(JSON.stringify({ 
+            type: 'resize', 
+            cols: xtermRef.current.cols, 
+            rows: xtermRef.current.rows 
+          }));
+        }
+      }, 50);
+    }
+  }, [settings]);
 
   return (
     <div className="terminal-container">
