@@ -3,7 +3,8 @@ import { useAuthContext } from "@asgardeo/auth-react";
 import QuestionPanel from './QuestionPanel';
 import Terminal from './Terminal';
 import ScoreSummary from './ScoreSummary';
-import { Terminal as TerminalIcon, Clock, LogOut } from 'lucide-react';
+import SettingsModal from './SettingsModal';
+import { Terminal as TerminalIcon, Clock, LogOut, Settings as SettingsIcon } from 'lucide-react';
 import './index.css';
 
 function App() {
@@ -11,6 +12,11 @@ function App() {
   const [timeLeft, setTimeLeft] = useState(7200); // 2 hours in seconds
   const [examFinished, setExamFinished] = useState(false);
   const [questionProgress, setQuestionProgress] = useState({});
+  const [showSettings, setShowSettings] = useState(false);
+  const [settings, setSettings] = useState({
+    fontSize: 14,
+    theme: 'dark'
+  });
 
   useEffect(() => {
     if (examFinished) return;
@@ -87,7 +93,14 @@ function App() {
           >
             Finish Exam
           </button>
-          <button onClick={() => signOut()} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', marginLeft: '10px' }}>
+          <button 
+            onClick={() => setShowSettings(true)} 
+            style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', marginLeft: '10px' }}
+            title="Settings"
+          >
+            <SettingsIcon size={18} />
+          </button>
+          <button onClick={() => signOut()} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', marginLeft: '10px' }} title="Log Out">
             <LogOut size={18} />
           </button>
         </div>
@@ -95,8 +108,16 @@ function App() {
       
       <main className="main-layout">
         <QuestionPanel questionProgress={questionProgress} setQuestionProgress={setQuestionProgress} />
-        <Terminal />
+        <Terminal settings={settings} />
       </main>
+
+      {showSettings && (
+        <SettingsModal 
+          onClose={() => setShowSettings(false)} 
+          settings={settings} 
+          onSettingsChange={setSettings} 
+        />
+      )}
     </>
   );
 }
