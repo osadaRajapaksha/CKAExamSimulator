@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuthContext } from "@asgardeo/auth-react";
 import QuestionPanel from './QuestionPanel';
 import Terminal from './Terminal';
+import ScoreSummary from './ScoreSummary';
 import { Terminal as TerminalIcon, Clock, LogOut } from 'lucide-react';
 import './index.css';
 
@@ -57,14 +58,10 @@ function App() {
 
   if (examFinished) {
     return (
-      <div className="exam-finished-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#0f172a', color: 'white' }}>
-        <TerminalIcon className="k8s-logo" size={64} style={{ marginBottom: '20px', color: '#10b981' }} />
-        <h1 style={{ marginBottom: '20px' }}>Exam Finished</h1>
-        <p>Your session has ended. Calculating results...</p>
-        <button onClick={() => window.location.reload()} style={{ marginTop: '30px', padding: '10px 20px', fontSize: '16px', cursor: 'pointer', backgroundColor: '#3b82f6', color: 'white', border: 'none', borderRadius: '5px' }}>
-          Restart Simulator
-        </button>
-      </div>
+      <ScoreSummary 
+        questionProgress={questionProgress} 
+        onRestart={() => window.location.reload()} 
+      />
     );
   }
 
