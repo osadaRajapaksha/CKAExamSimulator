@@ -9,6 +9,7 @@ function App() {
   const { state, signIn, signOut } = useAuthContext();
   const [timeLeft, setTimeLeft] = useState(7200); // 2 hours in seconds
   const [examFinished, setExamFinished] = useState(false);
+  const [questionProgress, setQuestionProgress] = useState({});
 
   useEffect(() => {
     if (examFinished) return;
@@ -96,7 +97,7 @@ function App() {
       </header>
       
       <main className="main-layout">
-        <QuestionPanel />
+        <QuestionPanel questionProgress={questionProgress} setQuestionProgress={setQuestionProgress} />
         <Terminal />
       </main>
     </>

@@ -2,17 +2,16 @@ import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, CheckCircle2, PlayCircle, Loader2 } from 'lucide-react';
 import questions from './questions.json';
 
-export default function QuestionPanel() {
+export default function QuestionPanel({ questionProgress, setQuestionProgress }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVerifying, setIsVerifying] = useState(false);
-  const [verifyStatus, setVerifyStatus] = useState(null); // 'success', 'error', null
   const [verifyLogs, setVerifyLogs] = useState('');
   
   const question = questions[currentIndex];
+  const verifyStatus = questionProgress[question.id] || null;
 
-  // Reset verification state when changing questions
+  // Reset verification logs when changing questions
   useEffect(() => {
-    setVerifyStatus(null);
     setVerifyLogs('');
   }, [currentIndex]);
 
@@ -30,7 +29,6 @@ export default function QuestionPanel() {
 
   const handleVerify = async () => {
     setIsVerifying(true);
-    setVerifyStatus(null);
     setVerifyLogs('Running verification scripts...');
     
     try {
@@ -46,10 +44,11 @@ export default function QuestionPanel() {
       });
       
       const data = await response.json();
-      setVerifyStatus(data.success ? 'success' : 'error');
+      const status = data.success ? 'success' : 'error';
+      setQuestionProgress(prev => ({ ...prev, [question.id]: status }));
       setVerifyLogs(data.logs || (data.success ? 'Success!' : 'Failed.'));
     } catch (err) {
-      setVerifyStatus('error');
+      setQuestionProgress(prev => ({ ...prev, [question.id]: 'error' }));
       setVerifyLogs('Failed to reach backend server. ' + err.message);
     } finally {
       setIsVerifying(false);
@@ -60,7 +59,7 @@ export default function QuestionPanel() {
     <div className="question-panel">
       <div className="question-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <CheckCircle2 size={20} color={currentIndex > 0 ? "var(--success-color)" : "var(--text-muted)"} />
+          <CheckCircle2 size={20} color={verifyStatus === 'success' ? "var(--success-color)" : "var(--text-muted)"} />
           <span style={{ fontWeight: 500 }}>
             Question {currentIndex + 1} of {questions.length}
           </span>
